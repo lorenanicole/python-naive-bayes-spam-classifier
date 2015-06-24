@@ -1,0 +1,21 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0" is_locked="false">
+    <option name="myName" value="Project Default" />
+    <option name="myLocal" value="false" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="7">
+            <item index="0" class="java.lang.String" itemvalue="twitter-text-py" />
+            <item index="1" class="java.lang.String" itemvalue="python-gearman" />
+            <item index="2" class="java.lang.String" itemvalue="requests" />
+            <item index="3" class="java.lang.String" itemvalue="pycassa" />
+            <item index="4" class="java.lang.String" itemvalue="MySQL-python" />
+            <item index="5" class="java.lang.String" itemvalue="splinter" />
+            <item index="6" class="java.lang.String" itemvalue="Sphinx" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
