@@ -3,6 +3,7 @@ from extract import extract_body
 from bayes import NaiveBayes
 import os
 import logging
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -27,32 +28,39 @@ class SpamHamDetector(object):
                     logger.info("Error training email %s: %s", row['Id'], e.message)
 
     def train_and_evaluate(self):
+        all_ids = list(range(1, 2501))
+        random.shuffle(all_ids)
+        training_ids, labeling_ids = all_ids[:2250], all_ids[2250:]
+
+        with open('%s/labels.csv' % self.path, 'r') as labels_csv:
+            reader = csv.DictReader(labels_csv)
+            for row in reader:
+                label = (row['Prediction'])
+                filename = '%s/TR/TRAIN_%s.eml' % (path, row['Id'])
+                if int(row['Id']) in training_ids:
+                    try:
+                        body = extract_body(filename)
+                        self.naive_bayes.train(int(label), body)
+                    except Exception as e:
+                        logger.info("Error training email %s: %s", row['Id'], e.message)
+
         correct, incorrect = 0, 0
         with open('%s/labels.csv' % self.path, 'r') as labels_csv:
             reader = csv.DictReader(labels_csv)
             for row in reader:
                 label = (row['Prediction'])
                 filename = '%s/TR/TRAIN_%s.eml' % (path, row['Id'])
-                if int(label) < 2251:
-                    try:
-                        body = extract_body(filename)
-                        self.naive_bayes.train(int(label), body)
-                    except Exception as e:
-                        logger.info("Error training email %s: %s", row['Id'], e.message)
-                if int(row['Id']) > 2250:
+                if int(row['Id']) in labeling_ids:
                     try:
                         test_body = extract_body(filename)
                         result = self.naive_bayes.classify(test_body)
-                        if result == int(row['Prediction']):
+                        if result == int(label):
                             correct += 1
                         else:
                             incorrect += 1
                     except Exception as e:
                         logger.info("Error classifying email %s: %s", row['Id'], e.message)
-                # print row['Id']
-        return "correct %s\n, incorrect %s, performance measurement %s" % (correct,
-                                                                           incorrect,
-                                                                           (float(correct) / (correct + incorrect)))
+        return self._calculate_results(correct, incorrect)
 
     def classify(self, size):
         counter = 1
@@ -68,6 +76,18 @@ class SpamHamDetector(object):
 
         self._store_results()
 
+    def display_results(self):
+        spam = sum(1 for category in self.classified_examples.values() if category == '0')
+        ham = sum(1 for category in self.classified_examples.values() if category == '1')
+        return "Spam Emails: %s\nHam Emails: %s\nSpam Percent: %s\nHam Percent: %s" \
+               % (spam, ham, (float(spam) / len(self.classified_examples)),
+                  (float(ham) / len(self.classified_examples)))
+
+    def _calculate_results(self, correct, incorrect):
+        return "correct %s, incorrect %s, performance measurement %s" % (correct,
+                                                                         incorrect,
+                                                                         (float(correct) / (correct + incorrect)))
+
     def _store_results(self):
         with open('%s/results.csv' % self.path, 'w+') as resultscsv:
             writer = csv.DictWriter(resultscsv, fieldnames=['id','Prediction'])
@@ -75,24 +95,20 @@ class SpamHamDetector(object):
             for example_num, category in self.classified_examples.items():
                 writer.writerow({'id': example_num, 'Prediction': category})
 
-    def display_results(self):
-        spam = sum(1 for category in self.classified_examples.values() if category == '0')
-        ham = sum(1 for category in self.classified_examples.values() if category == '1')
-        return "Spam Emails: %s\n Ham Emails: %s \nSpam Percent: %s\nHam Percent: %s" \
-               % (spam, ham, (float(spam) / len(self.classified_examples)),
-                  (float(ham) / len(self.classified_examples)))
-
-
 
 if __name__ == "__main__":
     print "starting!"
     path = os.path.dirname(__file__)
-    detector = SpamHamDetector([0,1], path)
+    detector = SpamHamDetector([0, 1], path)
+    print detector.train_and_evaluate()
+
+
+
+
+    # detector.train()
+    # print "done training!"
+    # detector.classify(1827)
+    # print "done classifying!"
+    # print detector.display_results()
+
     # print detector.train_and_evaluate()
-    # correct 249, incorrect 1, performance measurement 0.996
-    detector.train()
-    print "done training!"
-    detector.classify(1827)
-    print "done classifying!"
-    print detector.display_results()
-    # "Spam Emails: %s\n Ham Emails: %s \nSpam Percent: %s\nHam Percent: %s"
