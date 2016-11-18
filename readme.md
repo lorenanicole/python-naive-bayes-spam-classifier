@@ -18,6 +18,18 @@ To run the Naive Bayes classifier:
 cd naive-bayes
 python spam_detector.py
 ```
+###Python 3 Jupyter Notebook
+
+The Python 2.7 project has been ported to Python 3 and can be run in the Jupyter notebook.
+
+First you will want to create a Python3 virtualenv:
+
+```
+pyenv-3.5 python3env  # Update 3.5 with your version of Python 3
+source python3env/bin/activate  # Name your env whatever you like!
+pip3 install -r requirements.txt 
+``` 
+### Notes on Python Naive Bayes Implementation
 
 You can have the detector either train and evaluate itself against the training data (using 90% of the pre-labeled data as training and 10% to label) with: 
 
