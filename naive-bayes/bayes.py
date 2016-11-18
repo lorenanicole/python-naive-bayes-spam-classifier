@@ -28,7 +28,11 @@ class NaiveBayes(object):
 
     def _tokenize_text(self, text):
         text = re.findall(r"[\w']+", text)
-        return [word.lower() for word in text if word and word not in nltk.corpus.stopwords.words('english')]
+        words = []
+        for word in text:
+            if word and word not in nltk.corpus.stopwords.words('english'):
+                words.append(word)
+        return words
 
     def _increment_word_frequency(self, category, words):
         for word in words:

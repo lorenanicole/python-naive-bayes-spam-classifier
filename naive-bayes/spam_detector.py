@@ -15,7 +15,7 @@ class SpamHamDetector(object):
 
 
     def train(self):
-        with open('%s/labels.csv' % self.path, 'r') as labels_csv:
+        with open('{0}/labels.csv'.format(self.path), 'r') as labels_csv:
             reader = csv.DictReader(labels_csv)
             for row in reader:
                 label = (row['Prediction'])
@@ -32,7 +32,7 @@ class SpamHamDetector(object):
         random.shuffle(all_ids)
         training_ids, labeling_ids = all_ids[:2250], all_ids[2250:]
 
-        with open('%s/labels.csv' % self.path, 'r') as labels_csv:
+        with open('{0}/labels.csv'.format(self.path), 'r') as labels_csv:
             reader = csv.DictReader(labels_csv)
             for row in reader:
                 label = (row['Prediction'])
@@ -101,14 +101,8 @@ if __name__ == "__main__":
     path = os.path.dirname(__file__)
     detector = SpamHamDetector([0, 1], path)
     print detector.train_and_evaluate()
-
-
-
-
-    # detector.train()
-    # print "done training!"
-    # detector.classify(1827)
-    # print "done classifying!"
-    # print detector.display_results()
-
-    # print detector.train_and_evaluate()
+    detector.train()
+    print "done training!"
+    detector.classify(1827)
+    print "done classifying!"
+    print detector.display_results()
