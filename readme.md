@@ -1,8 +1,10 @@
-###Basic Naive Bayes Classifier in Python
-
-Project is written with Python 2.7.
+### Basic Naive Bayes Classifier in Python
 
 This approach makes use of pre-labeled data provided by the [Kaggle Classroom spam detection challenge](https://inclass.kaggle.com/c/adcg-ss14-challenge-02-spam-mails-detection/data).
+
+### `naive-bayes` Python 2 Classifier
+
+Python project code in `naive-bayes` is written with Python 2.7.
 
 For setup create a virtualenv with the requirements:
 
@@ -18,7 +20,7 @@ To run the Naive Bayes classifier:
 cd naive-bayes
 python spam_detector.py
 ```
-###Python 3 Jupyter Notebook
+### Python 3 Jupyter Notebook
 
 The Python 2.7 project has been ported to Python 3 and can be run in the Jupyter notebook.
 
@@ -52,7 +54,7 @@ detector.classify(1827)  # Number of emails to classify
 
 Ham has a label of 1 while Spam has a label of 0.
 
-###How Naive Bayes Implemented
+### How Naive Bayes Implemented
 
 This solution makes use of [Python's 2.7 Decimal module](https://docs.python.org/2/library/decimal.html), which is used for floating point arithmetic. (Prevents [floating point underflow](http://nlp.stanford.edu/IR-book/html/htmledition/naive-bayes-text-classification-1.html)!)
 
